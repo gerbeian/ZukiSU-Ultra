@@ -28,6 +28,15 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Generate Keystore
+        working-directory: manager
+        run: |
+          keytool -genkeypair -v -keystore ci-keystore.jks -alias zukisu -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=CI, OU=ZukiSU, O=ZukiSU, L=Unknown, S=Unknown, C=US"
+          echo "KEYSTORE_FILE=ci-keystore.jks" > signing.properties
+          echo "KEYSTORE_PASSWORD=android" >> signing.properties
+          echo "KEY_ALIAS=zukisu" >> signing.properties
+          echo "KEY_PASSWORD=android" >> signing.properties
+
       - name: Build Manager APK
         working-directory: manager
         run: |
